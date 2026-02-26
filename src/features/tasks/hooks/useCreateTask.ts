@@ -1,7 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createTask } from "../api/createTask";
 import type { Task } from "../api/getTasks";
-
+export type UITask = Task & {
+  optimistic?: boolean;
+};
 export const useCreateTask = () => {
   const queryClient = useQueryClient();
 
@@ -11,13 +13,14 @@ export const useCreateTask = () => {
     onMutate: async (newTask) => {
       await queryClient.cancelQueries({ queryKey: ["tasks"] });
 
-      const previousTasks = queryClient.getQueryData<Task[]>(["tasks"]);
+      const previousTasks = queryClient.getQueryData<Task[]>(["tasks"]) ?? [];
 
-      queryClient.setQueryData<Task[]>(["tasks"], (old = []) => [
+      queryClient.setQueryData<UITask[]>(["tasks"], (old = []) => [
         ...old,
         {
           id: Date.now(),
           ...newTask,
+          optimistic: true,
         },
       ]);
 

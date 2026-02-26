@@ -4,10 +4,11 @@ import { useCreateTask } from "./features/tasks/hooks/useCreateTask";
 
 function App() {
   const [title, setTitle] = useState("");
-  const { mutate } = useCreateTask();
-  const { data, isLoading, isError } = useTasks();
+  const { mutate, isError: isCreateError } = useCreateTask();
+  const { data, isLoading, isError: isFetchError } = useTasks();
   if (isLoading) return <h1>Loading...</h1>;
-  if (isError) return <h3 className="text-red-600"> Error loading tasks</h3>;
+  if (isFetchError)
+    return <h3 className="text-red-600"> Error loading tasks</h3>;
   return (
     <div className="w-screen flex flex-col items-center justify-center  py-20">
       <h1 className="text-2xl font-bold mb-4">Tasks</h1>
@@ -31,11 +32,25 @@ function App() {
       </div>
       <ul className="space-y-2">
         {data?.map((task) => (
-          <li key={task.id} className="border p-2 rounded">
-            {task.title}
+          <li
+            key={task.id}
+            className={`border p-2 rounded flex justify-between ${
+              task.optimistic ? "opacity-50" : ""
+            }`}
+          >
+            <span>{task.title}</span>
+
+            {task.optimistic && (
+              <span className="text-sm text-gray-500">Saving...</span>
+            )}
           </li>
         ))}
       </ul>
+      {isCreateError && (
+        <p className="text-red-600 mt-2">
+          Failed to create task. Please try again.
+        </p>
+      )}
     </div>
   );
 }

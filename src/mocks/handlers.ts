@@ -1,4 +1,4 @@
-import { http, HttpResponse } from "msw";
+import { delay, http, HttpResponse } from "msw";
 import type { Task } from "../features/tasks/api/getTasks";
 
 const tasks: Task[] = [
@@ -11,7 +11,16 @@ export const handlers = [
     return HttpResponse.json(tasks);
   }),
   http.post("/tasks", async ({ request }) => {
+    await delay(1500); //  1.5   fake delay
+
     const newTask = (await request.json()) as Omit<Task, "id">;
+
+    if (Math.random() < 0.5) {
+      return HttpResponse.json(
+        { message: "Server error while creating task" },
+        { status: 500 },
+      );
+    }
 
     const taskWithId = {
       ...newTask,
