@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { useTasks } from "./features/tasks/hooks/useTasks";
 import { useCreateTask } from "./features/tasks/hooks/useCreateTask";
+import { useToggleTask } from "./features/tasks/hooks/useToggleTask";
 
 function App() {
   const [title, setTitle] = useState("");
   const { mutate, isError: isCreateError } = useCreateTask();
   const { data, isLoading, isError: isFetchError } = useTasks();
+  const { mutate: toggle } = useToggleTask();
+
   if (isLoading) return <h1>Loading...</h1>;
   if (isFetchError)
     return <h3 className="text-red-600"> Error loading tasks</h3>;
@@ -34,15 +37,17 @@ function App() {
         {data?.map((task) => (
           <li
             key={task.id}
-            className={`border p-2 rounded flex justify-between ${
-              task.optimistic ? "opacity-50" : ""
+            className={`border p-2 rounded flex justify-between transition-all duration-300 ${
+              task.optimistic ? "opacity-50" : "opacity-100"
             }`}
           >
-            <span>{task.title}</span>
+            <span className={task.completed ? "line-through" : ""}>
+              {task.title}
+            </span>
 
-            {task.optimistic && (
-              <span className="text-sm text-gray-500">Saving...</span>
-            )}
+            <button onClick={() => toggle(task.id)}>
+              {task.completed ? "Undo" : "Complete"}
+            </button>
           </li>
         ))}
       </ul>
