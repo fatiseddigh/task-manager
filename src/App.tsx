@@ -2,18 +2,22 @@ import { useState } from "react";
 import { useTasks } from "./features/tasks/hooks/useTasks";
 import { useCreateTask } from "./features/tasks/hooks/useCreateTask";
 import { useToggleTask } from "./features/tasks/hooks/useToggleTask";
+import { useDeleteTask } from "./features/tasks/hooks/useDeleteTask";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   const [title, setTitle] = useState("");
   const { mutate, isError: isCreateError } = useCreateTask();
   const { data, isLoading, isError: isFetchError } = useTasks();
   const { mutate: toggle } = useToggleTask();
+  const { handleDelete } = useDeleteTask();
 
   if (isLoading) return <h1>Loading...</h1>;
   if (isFetchError)
     return <h3 className="text-red-600"> Error loading tasks</h3>;
   return (
     <div className="w-screen flex flex-col items-center justify-center  py-20">
+      <Toaster />
       <h1 className="text-2xl font-bold mb-4">Tasks</h1>
       <div className="mb-4 flex gap-2">
         <input
@@ -47,6 +51,9 @@ function App() {
 
             <button onClick={() => toggle(task.id)}>
               {task.completed ? "Undo" : "Complete"}
+            </button>
+            <button className="text-red-500" onClick={() => handleDelete(task)}>
+              Delete
             </button>
           </li>
         ))}

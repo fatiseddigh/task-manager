@@ -52,4 +52,26 @@ export const handlers = [
 
     return HttpResponse.json(task);
   }),
+  http.delete("/tasks/:id", async ({ params }) => {
+    await delay(1500); //  1.5   fake delay
+    const { id } = params;
+
+    const index = tasks.findIndex((t) => t.id === Number(id));
+
+    if (index === -1) {
+      return HttpResponse.json({ message: "Task not found" }, { status: 404 });
+    }
+
+    // simulate random failure
+    if (Math.random() < 0.3) {
+      return HttpResponse.json(
+        { message: "Failed to delete task" },
+        { status: 500 },
+      );
+    }
+
+    tasks.splice(index, 1);
+
+    return HttpResponse.json({ success: true });
+  }),
 ];
