@@ -1,7 +1,7 @@
 import { delay, http, HttpResponse } from "msw";
 import type { Task } from "../features/tasks/api/getTasks";
 
-const tasks: Task[] = [
+let tasks: Task[] = [
   { id: 1, title: "Learn React Query", completed: false },
   { id: 2, title: "Setup MSW properly", completed: true },
 ];
@@ -12,7 +12,6 @@ export const handlers = [
   }),
   http.post("/tasks", async ({ request }) => {
     await delay(1500); //  1.5   fake delay
-
     const newTask = (await request.json()) as Omit<Task, "id">;
 
     if (Math.random() < 0.5) {
@@ -71,6 +70,17 @@ export const handlers = [
     }
 
     tasks.splice(index, 1);
+
+    return HttpResponse.json({ success: true });
+  }),
+  http.put("/tasks/:id", async ({ params, request }) => {
+    const { id } = params;
+
+    const body = (await request.json()) as { title: string };
+
+    tasks = tasks.map((task) =>
+      task.id === Number(id) ? { ...task, title: body.title } : task,
+    );
 
     return HttpResponse.json({ success: true });
   }),

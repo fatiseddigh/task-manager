@@ -5,10 +5,17 @@ export const editTask = async ({
   id: number;
   title: string;
 }) => {
-  await new Promise((res) => setTimeout(res, 800));
+  const response = await fetch(`/tasks/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ title }),
+  });
 
-  return {
-    id,
-    title,
-  };
+  if (!response.ok) {
+    throw new Error("Failed to update task");
+  }
+
+  return response.json();
 };
