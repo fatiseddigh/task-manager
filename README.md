@@ -1,73 +1,84 @@
-# React + TypeScript + Vite
+# Task Manager – React Query Practice Project
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A task management application built to practice advanced React Query patterns and state synchronization techniques.
 
-Currently, two official plugins are available:
+This project focuses on understanding server state management, optimistic updates, and error handling in a controlled environment using a mocked API.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+* React + TypeScript (strict mode)
+* @tanstack/react-query
+* Redux (basic store setup)
+* Axios
+* MSW (Mock Service Worker)
+* TailwindCSS
+* react-error-boundary
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## What Is Implemented
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Server State Management
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+* Data fetching using `useQuery`
+* Mock API using MSW
+* Simulated network delay and random server errors
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Optimistic Updates
+
+* Optimistic task creation with rollback on failure
+* Optimistic delete with rollback support
+* Optimistic toggle (complete/incomplete) with error recovery
+* Inline editing with optimistic update
+* Manual cache updates using `setQueryData`
+* Query cancellation before mutation
+
+### Error Handling
+
+* Global `AppErrorBoundary`
+* Integration with React Query using `throwOnError`
+* Safe TypeScript handling of `unknown` errors
+
+---
+
+## Project Goals
+
+The goal of this project was to:
+
+* Understand how React Query manages server state
+* Practice cache manipulation and synchronization
+* Learn how optimistic updates work internally
+* Handle async failures safely
+* Work with strict TypeScript settings
+
+This project is primarily a learning-focused implementation.
+
+---
+
+## Running the Project
+
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+MSW runs locally to mock backend behavior.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+---
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Possible Improvements
+
+* Infinite scroll with `useInfiniteQuery`
+* Improved loading UX (skeleton states)
+* Better separation of error boundaries
+* Automated testing (React Testing Library + MSW)
+* Replace mock API with a real backend
+
+---
+
+## Notes
+
+This is not intended to be a production-ready app.
+It is a focused practice project to deepen understanding of React Query and async UI patterns.
