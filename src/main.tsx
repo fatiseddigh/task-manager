@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.tsx";
 import { AppProviders } from "./app/providers.tsx";
+import { AppErrorBoundary } from "./features/tasks/components/AppErrorBoundary.tsx";
 async function enableMocking() {
   if (import.meta.env.DEV) {
     const { worker } = await import("./mocks/browser");
@@ -13,7 +14,9 @@ enableMocking().then(() => {
   createRoot(document.getElementById("root")!).render(
     <StrictMode>
       <AppProviders>
-        <App />
+        <AppErrorBoundary>
+          <App />
+        </AppErrorBoundary>
       </AppProviders>
     </StrictMode>,
   );
